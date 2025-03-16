@@ -7,8 +7,8 @@ function KnowledgeTransfer() {
     const [query, setQuery] = useState("");
     const [results, setResults] = useState([]);
     const [formData, setFormData] = useState({ problem: "", solution: "", tags: "", category: "" });
-    const [selectedEntry, setSelectedEntry] = useState(null); // For editing
-    const [showForm, setShowForm] = useState(false); // To toggle the form visibility
+    const [selectedEntry, setSelectedEntry] = useState(null);
+    const [showForm, setShowForm] = useState(false);
 
     useEffect(() => {
         fetchKnowledge();
@@ -27,16 +27,14 @@ function KnowledgeTransfer() {
     const handleSubmit = async (e) => {
         e.preventDefault();
         if (selectedEntry) {
-            // Edit existing entry
             await axios.put(`${API_URL}/knowledge/${selectedEntry._id}`, { ...formData, tags: formData.tags.split(",") });
             setSelectedEntry(null);
         } else {
-            // Create new entry
             await axios.post(`${API_URL}/knowledge`, { ...formData, tags: formData.tags.split(",") });
         }
         setFormData({ problem: "", solution: "", tags: "", category: "" });
         fetchKnowledge();
-        setShowForm(false); // Hide form after submission
+        setShowForm(false);
     };
 
     const handleEdit = (entry) => {
@@ -54,8 +52,6 @@ function KnowledgeTransfer() {
         <div className="min-h-screen bg-gray-100 p-6">
             <div className="max-w-4xl mx-auto bg-white shadow-md rounded-lg p-6">
                 <h1 className="text-2xl font-bold text-center text-blue-600 mb-6">Knowledge Repository</h1>
-
-                {/* Search Input */}
                 <div className="flex mb-4">
                     <input
                         type="text"
@@ -68,8 +64,6 @@ function KnowledgeTransfer() {
                         Search
                     </button>
                 </div>
-
-                {/* Create Button */}
                 <button
                     onClick={() => {
                         setShowForm(true);
@@ -81,7 +75,6 @@ function KnowledgeTransfer() {
                     + Create New Problem
                 </button>
 
-                {/* Knowledge Table */}
                 <div className="overflow-x-auto">
                     <table className="min-w-full bg-white border border-gray-300 shadow-md rounded-lg">
                         <thead>
@@ -89,6 +82,7 @@ function KnowledgeTransfer() {
                                 <th className="px-4 py-2 text-left">Problem</th>
                                 <th className="px-4 py-2 text-left">Category</th>
                                 <th className="px-4 py-2 text-left">Tags</th>
+                                <th className="px-6 py-3 text-left">Solution</th>
                                 <th className="px-4 py-2 text-center">Actions</th>
                             </tr>
                         </thead>
@@ -98,12 +92,15 @@ function KnowledgeTransfer() {
                                     <td className="px-4 py-2">{item.problem}</td>
                                     <td className="px-4 py-2">{item.category}</td>
                                     <td className="px-4 py-2">{item.tags.join(", ")}</td>
+                                    <td className="px-6 py-3" title={item.solution}>
+                                        {item.solution.length > 20 ? item.solution.substring(0, 20) + "..." : item.solution}
+                                    </td>
                                     <td className="px-4 py-2 text-center">
                                         <button
                                             className="mr-2 px-3 py-1 bg-yellow-500 text-white rounded hover:bg-yellow-600"
                                             onClick={() => handleEdit(item)}
                                         >
-                                            Edit
+                                            View/Edit
                                         </button>
                                     </td>
                                 </tr>
@@ -112,7 +109,6 @@ function KnowledgeTransfer() {
                     </table>
                 </div>
 
-                {/* Create/Edit Form (Modal) */}
                 {showForm && (
                     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
                         <div className="bg-white p-6 rounded-lg shadow-lg w-96">
@@ -126,14 +122,14 @@ function KnowledgeTransfer() {
                                     required
                                     className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
                                 />
-                                <input
-                                    type="text"
+                                <textarea
                                     placeholder="Solution"
                                     value={formData.solution}
                                     onChange={(e) => setFormData({ ...formData, solution: e.target.value })}
                                     required
-                                    className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
+                                    className="w-full h-40 p-4 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-400 resize-none"
                                 />
+
                                 <input
                                     type="text"
                                     placeholder="Tags (comma separated)"

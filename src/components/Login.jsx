@@ -1,12 +1,16 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "../utils/AuthContext";
 
 export default function Login() {
-    const [email, setEmail] = useState("");
+    const [emailId, setEmailId] = useState("");
     const [password, setPassword] = useState("");
     const [loading, setLoading] = useState(false);
+    const navigate = useNavigate();
+    const { login } = useAuth();
 
     const handleLogin = async () => {
-        if (!email || !password) {
+        if (!emailId || !password) {
             alert("Please fill in all fields.");
             return;
         }
@@ -18,7 +22,8 @@ export default function Login() {
                 headers: {
                     "Content-Type": "application/json",
                 },
-                body: JSON.stringify({ email, password }),
+                body: JSON.stringify({ emailId, password }),
+                credentials: "include",
             });
 
             const data = await response.json();
@@ -27,8 +32,10 @@ export default function Login() {
                 throw new Error(data.message || "Login failed");
             }
 
+            login(data.emailId, data.token);
+
             alert("Login successful!");
-            console.log("User Data:", data); // Handle user session here
+            navigate("/");
         } catch (error) {
             alert(error.message);
         } finally {
@@ -37,7 +44,7 @@ export default function Login() {
     };
 
     const handleSignup = () => {
-        console.log("Redirecting to signup...");
+        navigate("/signup");
     };
 
     return (
@@ -48,8 +55,8 @@ export default function Login() {
                     <input
                         type="email"
                         placeholder="Email"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
+                        value={emailId}
+                        onChange={(e) => setEmailId(e.target.value)}
                         className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                     />
                     <input

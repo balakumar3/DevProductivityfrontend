@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { Trash2 } from "lucide-react";
+import Cookies from "js-cookie";
 
 const CollabComponent = () => {
     const [features, setFeatures] = useState([]);
     const [title, setTitle] = useState("");
     const [description, setDescription] = useState("");
     const [comments, setComments] = useState({});
-    const [user, setUser] = useState("Anonymous");
+    const [user] = useState(Cookies.get("user") || "Anonymous");
 
     useEffect(() => {
         axios.get("http://localhost:4000/features").then((res) => setFeatures(res.data));

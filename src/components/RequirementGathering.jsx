@@ -1,6 +1,6 @@
 import { useState } from "react";
 import ReactMarkdown from "react-markdown";
-import remarkGfm from "remark-gfm"; // Import the plugin for table support
+import remarkGfm from "remark-gfm";
 
 export default function RequirementGathering() {
     const [formData, setFormData] = useState({ inputData: "" });
@@ -15,7 +15,6 @@ export default function RequirementGathering() {
         e.preventDefault();
         setLoading(true);
         setResults(null);
-
         try {
             const response = await fetch("http://localhost:4000/api/getDetailedRequirements", {
                 method: "POST",
@@ -33,13 +32,8 @@ export default function RequirementGathering() {
 
     return (
         <div className="flex flex-col gap-6 p-6 relative">
-            {/* Header Section */}
-            <header className="text-center py-4 shadow-md rounded-lg bg-violet-200 absolute top-[-15px] left-0 right-0 mx-auto w-full max-w-4xl">
-                <h1 className="text-3xl font-bold text-violet-700">Dev Productivity Web App</h1>
-            </header>
 
             <div className="flex gap-6 mt-12">
-                {/* Form Section */}
                 <form onSubmit={handleSubmit} className="w-1/2 bg-gray-100 p-5 rounded-lg shadow-md">
                     <h2 className="text-xl font-bold mb-3">Input Data</h2>
                     <div className="space-y-3">
@@ -58,7 +52,6 @@ export default function RequirementGathering() {
                     </div>
                 </form>
 
-                {/* Results Section */}
                 <div className="w-1/2 p-5 bg-gray-200 rounded-lg shadow-md overflow-auto max-h-[38rem]">
                     <h2 className="text-xl font-bold mb-3">Results</h2>
                     {loading && <p>Loading...</p>}
