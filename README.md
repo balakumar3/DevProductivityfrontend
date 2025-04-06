@@ -9,3 +9,6 @@ Currently, two official plugins are available:
 
 
 npm i react-router-dom
+
+docker build -t my-react-app .
+docker run -p 5173:5173 my-react-app
