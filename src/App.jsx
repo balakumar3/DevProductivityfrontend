@@ -8,6 +8,7 @@ import Signup from "./components/Signup";
 import RequirementGathering from "./components/RequirementGathering";
 import KnowledgeTransfer from "./components/KnowledgeTransfer";
 import CollabComponent from "./components/CollabComponent";
+import ManageUsers from "./components/ManageUsers";
 
 function App() {
     return (
@@ -21,6 +22,7 @@ function App() {
                         <Route path="/requirement-gathering" element={<ProtectedRoute><RequirementGathering /></ProtectedRoute>} />
                         <Route path="/knowledge-transfer" element={<ProtectedRoute><KnowledgeTransfer /></ProtectedRoute>} />
                         <Route path="/collaboration" element={<ProtectedRoute><CollabComponent /></ProtectedRoute>} />
+                        <Route path="/manage-users" element={<ProtectedRoute><ManageUsers /></ProtectedRoute>} />
                         <Route path="*" element={<Navigate to="/" />} />
                     </Routes>
                 </Layout>

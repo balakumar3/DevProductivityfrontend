@@ -1,10 +1,21 @@
-import './App.css'
+import './App.css';
 import { Link } from 'react-router-dom';
 
-function Home() {
+function Home({ role }) {
   return (
     <nav className="bg-blue-200 p-6 shadow-lg flex justify-center">
       <ul className="flex flex-col space-y-4">
+        {role === 'admin' && (
+          <li>
+            <Link
+              to="/manage-users"
+              className="block bg-indigo-500 text-white text-lg font-semibold py-3 px-6 rounded-lg hover:bg-indigo-600 transition duration-300"
+            >
+              Manage Users
+            </Link>
+          </li>
+        )}
+
         <li>
           <Link
             to="/requirement-gathering"
