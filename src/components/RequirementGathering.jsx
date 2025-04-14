@@ -31,17 +31,20 @@ export default function RequirementGathering() {
     };
 
     return (
-        <div className="flex flex-col gap-6 p-6 relative">
-
-            <div className="flex gap-6 mt-12">
-                <form onSubmit={handleSubmit} className="w-1/2 bg-gray-100 p-5 rounded-lg shadow-md">
-                    <h2 className="text-xl font-bold mb-3">Input Data</h2>
+        <div className="flex flex-col gap-6 p-4 sm:p-6">
+            <div className="flex flex-col md:flex-row gap-6 mt-8">
+                {/* Form Section */}
+                <form
+                    onSubmit={handleSubmit}
+                    className="w-full md:w-1/2 bg-gray-100 p-4 sm:p-5 rounded-lg shadow-md"
+                >
+                    <h2 className="text-lg sm:text-xl font-bold mb-3">Input Data</h2>
                     <div className="space-y-3">
                         <textarea
                             name="inputData"
                             onChange={handleChange}
                             placeholder="Enter your data here..."
-                            className="w-full p-3 border rounded h-56"
+                            className="w-full p-3 border rounded h-56 resize-none"
                         />
                         <button
                             type="submit"
@@ -52,8 +55,9 @@ export default function RequirementGathering() {
                     </div>
                 </form>
 
-                <div className="w-1/2 p-5 bg-gray-200 rounded-lg shadow-md overflow-auto max-h-[38rem]">
-                    <h2 className="text-xl font-bold mb-3">Results</h2>
+                {/* Results Section */}
+                <div className="w-full md:w-1/2 p-4 sm:p-5 bg-gray-200 rounded-lg shadow-md overflow-auto max-h-[38rem]">
+                    <h2 className="text-lg sm:text-xl font-bold mb-3">Results</h2>
                     {loading && <p>Loading...</p>}
                     {results && (
                         <div className="bg-white p-3 rounded border text-sm overflow-auto max-h-[34rem] whitespace-pre-wrap break-words">

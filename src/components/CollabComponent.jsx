@@ -16,13 +16,9 @@ const CollabComponent = () => {
     const socketRef = useRef(null);
 
     useEffect(() => {
-        // Load features
         axios.get("http://localhost:4000/features").then((res) => setFeatures(res.data));
-
-        // Initialize socket
         socketRef.current = io("http://localhost:4000");
 
-        // Listen to new messages
         socketRef.current.on("newMessage", ({ featureId, message }) => {
             setChatMessages((prev) => ({
                 ...prev,
@@ -30,7 +26,6 @@ const CollabComponent = () => {
             }));
         });
 
-        // Listen to chat history per feature
         socketRef.current.on("chatHistory", ({ featureId, messages }) => {
             setChatMessages((prev) => ({
                 ...prev,
@@ -50,11 +45,7 @@ const CollabComponent = () => {
     const sendMessage = (featureId) => {
         const text = chatInput[featureId]?.trim();
         if (!text) return;
-        socketRef.current.emit("sendMessage", {
-            featureId,
-            user,
-            text
-        });
+        socketRef.current.emit("sendMessage", { featureId, user, text });
         setChatInput({ ...chatInput, [featureId]: "" });
     };
 
@@ -68,8 +59,7 @@ const CollabComponent = () => {
     };
 
     const upvoteFeature = (id) => {
-        axios
-            .post(`http://localhost:4000/features/${id}/vote`, { user })
+        axios.post(`http://localhost:4000/features/${id}/vote`, { user })
             .then((res) => {
                 setFeatures(features.map((f) => (f._id === id ? res.data : f)));
             })
@@ -97,21 +87,35 @@ const CollabComponent = () => {
     };
 
     return (
-        <div className="max-w-3xl mx-auto p-4">
+        <div className="max-w-4xl mx-auto p-4">
             <h1 className="text-2xl font-bold mb-4">Feature Requests</h1>
-            <div className="mb-4">
-                <input className="border p-2 w-full mb-2" placeholder="Feature title" value={title} onChange={(e) => setTitle(e.target.value)} />
-                <input className="border p-2 w-full mb-2" placeholder="Description" value={description} onChange={(e) => setDescription(e.target.value)} />
-                <button className="bg-blue-500 text-white px-4 py-2 rounded" onClick={addFeature}>Submit Feature</button>
+
+            <div className="mb-6 space-y-2">
+                <input
+                    className="border p-2 w-full rounded"
+                    placeholder="Feature title"
+                    value={title}
+                    onChange={(e) => setTitle(e.target.value)}
+                />
+                <input
+                    className="border p-2 w-full rounded"
+                    placeholder="Description"
+                    value={description}
+                    onChange={(e) => setDescription(e.target.value)}
+                />
+                <button className="bg-blue-500 text-white px-4 py-2 rounded w-full sm:w-auto" onClick={addFeature}>
+                    Submit Feature
+                </button>
             </div>
-            <ul>
+
+            <ul className="space-y-6">
                 {features.map((feature) => (
-                    <li key={feature._id} className="border p-4 mb-6 rounded shadow-sm">
-                        <div className="flex justify-between items-start">
+                    <li key={feature._id} className="border p-4 rounded shadow-sm">
+                        <div className="flex flex-col sm:flex-row sm:justify-between gap-3">
                             <div className="w-full">
-                                <h3 className="text-xl font-semibold">{feature.title}</h3>
-                                <p className="text-gray-600">{feature.description}</p>
-                                <p className="font-bold">Votes: {feature.votes}</p>
+                                <h3 className="text-xl font-semibold break-words">{feature.title}</h3>
+                                <p className="text-gray-600 break-words">{feature.description}</p>
+                                <p className="font-bold mt-1">Votes: {feature.votes}</p>
 
                                 {!feature.votedUsers?.includes(user) && (
                                     <button
@@ -122,32 +126,49 @@ const CollabComponent = () => {
                                     </button>
                                 )}
 
-                                <ul className="mt-3">
+                                <ul className="mt-3 space-y-1">
                                     {feature.comments.map((c, index) => (
-                                        <li key={index} className="text-sm text-gray-700">{c.user}: {c.text}</li>
+                                        <li key={index} className="text-sm text-gray-700 break-words">
+                                            <span className="font-medium">{c.user}:</span> {c.text}
+                                        </li>
                                     ))}
                                 </ul>
+
                                 <input
-                                    className="border p-2 w-full mt-2"
+                                    className="border p-2 w-full mt-2 rounded"
                                     placeholder="Comment"
                                     value={comments[feature._id] || ""}
-                                    onChange={(e) => setComments({ ...comments, [feature._id]: e.target.value })}
+                                    onChange={(e) =>
+                                        setComments({ ...comments, [feature._id]: e.target.value })
+                                    }
                                 />
-                                <button className="bg-purple-500 text-white px-3 py-1 rounded mt-2" onClick={() => addComment(feature._id)}>Add Comment</button>
+                                <button
+                                    className="bg-purple-500 text-white px-3 py-1 rounded mt-2"
+                                    onClick={() => addComment(feature._id)}
+                                >
+                                    Add Comment
+                                </button>
 
                                 {/* Team Chat Section */}
                                 <div className="mt-4 border-t pt-3">
                                     <h4 className="font-semibold">Team Chat</h4>
-                                    <button className="text-blue-500 text-sm underline mb-1" onClick={() => joinChatRoom(feature._id)}>Join Chat</button>
-                                    <div className="bg-gray-100 p-2 rounded h-40 overflow-y-auto">
+                                    <button
+                                        className="text-blue-500 text-sm underline mb-1"
+                                        onClick={() => joinChatRoom(feature._id)}
+                                    >
+                                        Join Chat
+                                    </button>
+
+                                    <div className="bg-gray-100 p-2 rounded h-40 overflow-y-auto text-sm">
                                         {(chatMessages[feature._id] || []).map((msg, idx) => (
-                                            <div key={idx} className="text-sm text-gray-800 mb-1">
+                                            <div key={idx} className="mb-1 break-words">
                                                 <span className="font-bold">{msg.user}:</span> {msg.text}
                                             </div>
                                         ))}
                                     </div>
+
                                     <input
-                                        className="border p-2 w-full mt-2"
+                                        className="border p-2 w-full mt-2 rounded"
                                         placeholder="Send a message..."
                                         value={chatInput[feature._id] || ""}
                                         onChange={(e) =>
@@ -165,9 +186,13 @@ const CollabComponent = () => {
                                     </button>
                                 </div>
                             </div>
-                            <button className="text-red-500" onClick={() => deleteFeature(feature._id)}>
-                                <Trash2 size={20} />
-                            </button>
+
+                            {/* Delete Button */}
+                            <div className="sm:ml-4">
+                                <button className="text-red-500" onClick={() => deleteFeature(feature._id)}>
+                                    <Trash2 size={20} />
+                                </button>
+                            </div>
                         </div>
                     </li>
                 ))}

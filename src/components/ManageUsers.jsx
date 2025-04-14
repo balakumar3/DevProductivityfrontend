@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 
-const API_URL = 'http://localhost:4000/users'; // Adjust if needed
+const API_URL = 'http://localhost:4000/users';
 
 const ManageUsers = () => {
     const [users, setUsers] = useState([]);
@@ -91,160 +91,93 @@ const ManageUsers = () => {
     };
 
     return (
-        <div className="p-6">
-            <h2 className="text-3xl font-bold mb-6 text-center text-gray-800">Manage Users</h2>
+        <div className="p-4 sm:p-6">
+            <h2 className="text-xl sm:text-3xl font-bold mb-4 sm:mb-6 text-center text-gray-800">Manage Users</h2>
             <div className="overflow-x-auto">
-                <table className="min-w-full bg-white rounded-lg shadow">
+                <table className="min-w-full text-sm sm:text-base bg-white rounded-lg shadow">
                     <thead>
                         <tr className="bg-blue-100 text-blue-900">
-                            <th className="py-3 px-4 text-left">ID</th>
-                            <th className="py-3 px-4 text-left">First Name</th>
-                            <th className="py-3 px-4 text-left">Last Name</th>
-                            <th className="py-3 px-4 text-left">Email</th>
-                            <th className="py-3 px-4 text-left">Role</th>
-                            <th className="py-3 px-4 text-left">Status</th>
-                            <th className="py-3 px-4 text-left">Completed</th>
-                            <th className="py-3 px-4 text-left">Pending</th>
-                            <th className="py-3 px-4 text-left">Overdue</th>
-                            <th className="py-3 px-4 text-left">Team Name</th>
-                            <th className="py-3 px-4 text-left">Avg Time (hrs)</th>
-                            <th className="py-3 px-4 text-left">Actions</th>
+                            {[
+                                'ID', 'First Name', 'Last Name', 'Email', 'Role', 'Status',
+                                'Completed', 'Pending', 'Overdue', 'Team Name', 'Avg Time (hrs)', 'Actions'
+                            ].map((header) => (
+                                <th key={header} className="py-2 px-2 sm:px-4 whitespace-nowrap text-left">{header}</th>
+                            ))}
                         </tr>
                     </thead>
                     <tbody>
                         {users.map((user) => (
                             <tr key={user._id} className="border-t hover:bg-gray-50 transition">
-                                <td className="py-3 px-4">{user._id}</td>
-
+                                <td className="py-2 px-2 sm:px-4">{user._id}</td>
                                 {editingUserId === user._id ? (
                                     <>
-                                        <td className="py-3 px-4">
-                                            <input
-                                                type="text"
-                                                name="firstName"
-                                                value={editData.firstName}
+                                        <td className="py-2 px-2 sm:px-4">
+                                            <input type="text" name="firstName" value={editData.firstName}
                                                 onChange={handleEditChange}
-                                                className="border rounded px-2 py-1 w-full"
-                                            />
+                                                className="w-full px-2 py-1 border rounded text-sm" />
                                         </td>
-                                        <td className="py-3 px-4">
-                                            <input
-                                                type="text"
-                                                name="lastName"
-                                                value={editData.lastName}
+                                        <td className="py-2 px-2 sm:px-4">
+                                            <input type="text" name="lastName" value={editData.lastName}
                                                 onChange={handleEditChange}
-                                                className="border rounded px-2 py-1 w-full"
-                                            />
+                                                className="w-full px-2 py-1 border rounded text-sm" />
                                         </td>
-                                        <td className="py-3 px-4">{user.emailId}</td>
-                                        <td className="py-3 px-4">
-                                            <input
-                                                type="text"
-                                                name="role"
-                                                value={editData.role}
+                                        <td className="py-2 px-2 sm:px-4">{user.emailId}</td>
+                                        <td className="py-2 px-2 sm:px-4">
+                                            <input type="text" name="role" value={editData.role}
                                                 onChange={handleEditChange}
-                                                className="border rounded px-2 py-1 w-full"
-                                            />
+                                                className="w-full px-2 py-1 border rounded text-sm" />
                                         </td>
-                                        <td className="py-3 px-4">
-                                            <input
-                                                type="text"
-                                                name="status"
-                                                value={editData.status}
+                                        <td className="py-2 px-2 sm:px-4">
+                                            <input type="text" name="status" value={editData.status}
                                                 onChange={handleEditChange}
-                                                className="border rounded px-2 py-1 w-full"
-                                            />
+                                                className="w-full px-2 py-1 border rounded text-sm" />
                                         </td>
-                                        <td className="py-3 px-4">
-                                            <input
-                                                type="number"
-                                                name="completedTasks"
-                                                value={editData.completedTasks}
+                                        {['completedTasks', 'pendingTasks', 'overdueTasks'].map(field => (
+                                            <td key={field} className="py-2 px-2 sm:px-4">
+                                                <input type="number" name={field} value={editData[field]}
+                                                    onChange={handleEditChange}
+                                                    className="w-full px-2 py-1 border rounded text-sm" />
+                                            </td>
+                                        ))}
+                                        <td className="py-2 px-2 sm:px-4">
+                                            <input type="text" name="teamName" value={editData.teamName}
                                                 onChange={handleEditChange}
-                                                className="border rounded px-2 py-1 w-full"
-                                            />
+                                                className="w-full px-2 py-1 border rounded text-sm" />
                                         </td>
-                                        <td className="py-3 px-4">
-                                            <input
-                                                type="number"
-                                                name="pendingTasks"
-                                                value={editData.pendingTasks}
-                                                onChange={handleEditChange}
-                                                className="border rounded px-2 py-1 w-full"
-                                            />
-                                        </td>
-                                        <td className="py-3 px-4">
-                                            <input
-                                                type="number"
-                                                name="overdueTasks"
-                                                value={editData.overdueTasks}
-                                                onChange={handleEditChange}
-                                                className="border rounded px-2 py-1 w-full"
-                                            />
-                                        </td>
-                                        <td className="py-3 px-4">
-                                            <input
-                                                type="text"
-                                                name="teamName"
-                                                value={editData.teamName}
-                                                onChange={handleEditChange}
-                                                className="border rounded px-2 py-1 w-full"
-                                            />
-                                        </td>
-                                        <td className="py-3 px-4">
-                                            <input
-                                                type="number"
-                                                name="avgCompletionTime"
-                                                step="0.1"
+                                        <td className="py-2 px-2 sm:px-4">
+                                            <input type="number" step="0.1" name="avgCompletionTime"
                                                 value={editData.avgCompletionTime}
                                                 onChange={handleEditChange}
-                                                className="border rounded px-2 py-1 w-full"
-                                            />
+                                                className="w-full px-2 py-1 border rounded text-sm" />
                                         </td>
-                                        <td className="py-3 px-4 space-x-2">
-                                            <button
-                                                onClick={() => handleEditSubmit(user._id)}
-                                                className="px-3 py-1 bg-green-500 hover:bg-green-600 text-white text-sm rounded"
-                                            >
-                                                Save
-                                            </button>
-                                            <button
-                                                onClick={cancelEdit}
-                                                className="px-3 py-1 bg-gray-400 hover:bg-gray-500 text-white text-sm rounded"
-                                            >
-                                                Cancel
-                                            </button>
+                                        <td className="py-2 px-2 sm:px-4 space-x-1">
+                                            <button onClick={() => handleEditSubmit(user._id)}
+                                                className="px-2 sm:px-3 py-1 bg-green-500 hover:bg-green-600 text-white text-xs sm:text-sm rounded">Save</button>
+                                            <button onClick={cancelEdit}
+                                                className="px-2 sm:px-3 py-1 bg-gray-400 hover:bg-gray-500 text-white text-xs sm:text-sm rounded">Cancel</button>
                                         </td>
                                     </>
                                 ) : (
                                     <>
-                                        <td className="py-3 px-4">{user.firstName}</td>
-                                        <td className="py-3 px-4">{user.lastName}</td>
-                                        <td className="py-3 px-4">{user.emailId}</td>
-                                        <td className="py-3 px-4">{user.role}</td>
-                                        <td className="py-3 px-4">
-                                            <span className="px-3 py-1 text-sm rounded-full font-semibold bg-gray-100 text-gray-800 capitalize">
+                                        <td className="py-2 px-2 sm:px-4">{user.firstName}</td>
+                                        <td className="py-2 px-2 sm:px-4">{user.lastName}</td>
+                                        <td className="py-2 px-2 sm:px-4">{user.emailId}</td>
+                                        <td className="py-2 px-2 sm:px-4">{user.role}</td>
+                                        <td className="py-2 px-2 sm:px-4 capitalize">
+                                            <span className="px-2 py-1 text-xs sm:text-sm font-medium bg-gray-100 text-gray-800 rounded">
                                                 {user.status}
                                             </span>
                                         </td>
-                                        <td className="py-3 px-4">{user.completedTasks}</td>
-                                        <td className="py-3 px-4">{user.pendingTasks}</td>
-                                        <td className="py-3 px-4">{user.overdueTasks}</td>
-                                        <td className="py-3 px-4">{user.teamName}</td>
-                                        <td className="py-3 px-4">{user.avgCompletionTime}</td>
-                                        <td className="py-3 px-4 space-x-2">
-                                            <button
-                                                onClick={() => startEditing(user)}
-                                                className="px-3 py-1 bg-blue-500 hover:bg-blue-600 text-white text-sm rounded"
-                                            >
-                                                Edit
-                                            </button>
-                                            <button
-                                                onClick={() => handleDelete(user._id)}
-                                                className="px-3 py-1 bg-red-500 hover:bg-red-600 text-white text-sm rounded"
-                                            >
-                                                Delete
-                                            </button>
+                                        <td className="py-2 px-2 sm:px-4">{user.completedTasks}</td>
+                                        <td className="py-2 px-2 sm:px-4">{user.pendingTasks}</td>
+                                        <td className="py-2 px-2 sm:px-4">{user.overdueTasks}</td>
+                                        <td className="py-2 px-2 sm:px-4">{user.teamName}</td>
+                                        <td className="py-2 px-2 sm:px-4">{user.avgCompletionTime}</td>
+                                        <td className="py-2 px-2 sm:px-4 space-x-1">
+                                            <button onClick={() => startEditing(user)}
+                                                className="px-2 sm:px-3 py-1 bg-blue-500 hover:bg-blue-600 text-white text-xs sm:text-sm rounded">Edit</button>
+                                            <button onClick={() => handleDelete(user._id)}
+                                                className="px-2 sm:px-3 py-1 bg-red-500 hover:bg-red-600 text-white text-xs sm:text-sm rounded">Delete</button>
                                         </td>
                                     </>
                                 )}
@@ -252,9 +185,7 @@ const ManageUsers = () => {
                         ))}
                         {users.length === 0 && (
                             <tr>
-                                <td colSpan="11" className="text-center py-6 text-gray-500">
-                                    No users found.
-                                </td>
+                                <td colSpan="12" className="text-center py-6 text-gray-500">No users found.</td>
                             </tr>
                         )}
                     </tbody>
