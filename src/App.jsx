@@ -9,6 +9,7 @@ import RequirementGathering from "./components/RequirementGathering";
 import KnowledgeTransfer from "./components/KnowledgeTransfer";
 import CollabComponent from "./components/CollabComponent";
 import ManageUsers from "./components/ManageUsers";
+import Dashboard from "./components/Dashboard";
 
 function App() {
     return (
@@ -23,6 +24,7 @@ function App() {
                         <Route path="/knowledge-transfer" element={<ProtectedRoute><KnowledgeTransfer /></ProtectedRoute>} />
                         <Route path="/collaboration" element={<ProtectedRoute><CollabComponent /></ProtectedRoute>} />
                         <Route path="/manage-users" element={<ProtectedRoute><ManageUsers /></ProtectedRoute>} />
+                        <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
                         <Route path="*" element={<Navigate to="/" />} />
                     </Routes>
                 </Layout>

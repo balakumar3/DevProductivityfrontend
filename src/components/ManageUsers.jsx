@@ -10,7 +10,12 @@ const ManageUsers = () => {
         firstName: '',
         lastName: '',
         role: '',
-        status: ''
+        status: '',
+        completedTasks: 0,
+        pendingTasks: 0,
+        overdueTasks: 0,
+        avgCompletionTime: 0,
+        teamName: '',
     });
 
     const fetchUsers = async () => {
@@ -32,7 +37,12 @@ const ManageUsers = () => {
             firstName: user.firstName,
             lastName: user.lastName,
             role: user.role,
-            status: user.status
+            status: user.status,
+            completedTasks: user.completedTasks || 0,
+            pendingTasks: user.pendingTasks || 0,
+            overdueTasks: user.overdueTasks || 0,
+            avgCompletionTime: user.avgCompletionTime || 0,
+            teamName: user.teamName || "",
         });
     };
 
@@ -42,12 +52,21 @@ const ManageUsers = () => {
             firstName: '',
             lastName: '',
             role: '',
-            status: ''
+            status: '',
+            completedTasks: 0,
+            pendingTasks: 0,
+            overdueTasks: 0,
+            avgCompletionTime: 0,
+            teamName: ''
         });
     };
 
     const handleEditChange = (e) => {
-        setEditData({ ...editData, [e.target.name]: e.target.value });
+        const { name, value } = e.target;
+        setEditData((prev) => ({
+            ...prev,
+            [name]: name === 'avgCompletionTime' ? parseFloat(value) : parseInt(value) || value
+        }));
     };
 
     const handleEditSubmit = async (id) => {
@@ -84,6 +103,11 @@ const ManageUsers = () => {
                             <th className="py-3 px-4 text-left">Email</th>
                             <th className="py-3 px-4 text-left">Role</th>
                             <th className="py-3 px-4 text-left">Status</th>
+                            <th className="py-3 px-4 text-left">Completed</th>
+                            <th className="py-3 px-4 text-left">Pending</th>
+                            <th className="py-3 px-4 text-left">Overdue</th>
+                            <th className="py-3 px-4 text-left">Team Name</th>
+                            <th className="py-3 px-4 text-left">Avg Time (hrs)</th>
                             <th className="py-3 px-4 text-left">Actions</th>
                         </tr>
                     </thead>
@@ -131,6 +155,52 @@ const ManageUsers = () => {
                                                 className="border rounded px-2 py-1 w-full"
                                             />
                                         </td>
+                                        <td className="py-3 px-4">
+                                            <input
+                                                type="number"
+                                                name="completedTasks"
+                                                value={editData.completedTasks}
+                                                onChange={handleEditChange}
+                                                className="border rounded px-2 py-1 w-full"
+                                            />
+                                        </td>
+                                        <td className="py-3 px-4">
+                                            <input
+                                                type="number"
+                                                name="pendingTasks"
+                                                value={editData.pendingTasks}
+                                                onChange={handleEditChange}
+                                                className="border rounded px-2 py-1 w-full"
+                                            />
+                                        </td>
+                                        <td className="py-3 px-4">
+                                            <input
+                                                type="number"
+                                                name="overdueTasks"
+                                                value={editData.overdueTasks}
+                                                onChange={handleEditChange}
+                                                className="border rounded px-2 py-1 w-full"
+                                            />
+                                        </td>
+                                        <td className="py-3 px-4">
+                                            <input
+                                                type="text"
+                                                name="teamName"
+                                                value={editData.teamName}
+                                                onChange={handleEditChange}
+                                                className="border rounded px-2 py-1 w-full"
+                                            />
+                                        </td>
+                                        <td className="py-3 px-4">
+                                            <input
+                                                type="number"
+                                                name="avgCompletionTime"
+                                                step="0.1"
+                                                value={editData.avgCompletionTime}
+                                                onChange={handleEditChange}
+                                                className="border rounded px-2 py-1 w-full"
+                                            />
+                                        </td>
                                         <td className="py-3 px-4 space-x-2">
                                             <button
                                                 onClick={() => handleEditSubmit(user._id)}
@@ -157,6 +227,11 @@ const ManageUsers = () => {
                                                 {user.status}
                                             </span>
                                         </td>
+                                        <td className="py-3 px-4">{user.completedTasks}</td>
+                                        <td className="py-3 px-4">{user.pendingTasks}</td>
+                                        <td className="py-3 px-4">{user.overdueTasks}</td>
+                                        <td className="py-3 px-4">{user.teamName}</td>
+                                        <td className="py-3 px-4">{user.avgCompletionTime}</td>
                                         <td className="py-3 px-4 space-x-2">
                                             <button
                                                 onClick={() => startEditing(user)}
@@ -177,7 +252,7 @@ const ManageUsers = () => {
                         ))}
                         {users.length === 0 && (
                             <tr>
-                                <td colSpan="7" className="text-center py-6 text-gray-500">
+                                <td colSpan="11" className="text-center py-6 text-gray-500">
                                     No users found.
                                 </td>
                             </tr>

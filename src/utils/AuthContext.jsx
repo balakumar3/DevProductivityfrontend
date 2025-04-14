@@ -27,7 +27,7 @@ export function AuthProvider({ children }) {
     const login = (userData, jwtToken) => {
         setUser(userData);
         setToken(jwtToken);
-        const expiresInMinutes = 5;
+        const expiresInMinutes = 40;
         const expiryDate = new Date(new Date().getTime() + expiresInMinutes * 60 * 1000);
         Cookies.set("token", jwtToken, { expires: expiryDate, secure: true });
         Cookies.set("user", JSON.stringify(userData), { expires: expiryDate, secure: true });

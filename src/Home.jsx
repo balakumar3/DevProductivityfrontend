@@ -40,6 +40,15 @@ function Home({ role }) {
             Collaboration
           </Link>
         </li>
+
+        <li>
+          <Link
+            to="/dashboard"
+            className="block bg-pink-500 text-white text-lg font-semibold py-3 px-6 rounded-lg hover:bg-pink-600 transition duration-300"
+          >
+            Dashboard
+          </Link>
+        </li>
       </ul>
     </nav>
   );

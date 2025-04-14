@@ -10,8 +10,10 @@ export default function ProtectedRoute({ children }) {
 
     try {
         const decoded = jwtDecode(token);
+        console.log("decoded is ", decoded);
         const userRole = decoded.role;
-        return cloneElement(children, { role: userRole });
+        const userEmail = decoded.emailId;
+        return cloneElement(children, { role: userRole, emailId: userEmail });
     } catch (err) {
         console.error("Invalid token:", err);
         return <Navigate to="/login" />;
